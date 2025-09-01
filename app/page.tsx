@@ -5,7 +5,6 @@ export default function Home() {
   return (
      <main className="flex items-center justify-center min-h-screen">
       <div className="text-center space-y-8 p-6">
-        {/* Title */}
         <h1 className="text-4xl md:text-5xl font-bold text-gray-800">
           Welcome to School Management
         </h1>
@@ -13,7 +12,6 @@ export default function Home() {
           Manage your schools efficiently
         </p>
 
-        {/* Buttons */}
         <div className="flex flex-col md:flex-row gap-6 justify-center">
           <Link
             href="/addSchool"

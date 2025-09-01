@@ -44,7 +44,6 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           className="md:hidden text-2xl focus:outline-none"
           onClick={() => setMenuOpen((prev) => !prev)}
@@ -53,7 +52,6 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile Dropdown */}
       {menuOpen && (
         <div className="md:hidden flex flex-col space-y-2 mt-3 px-6 pb-4">
           {links.map((link) => (

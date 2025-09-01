@@ -25,7 +25,6 @@ export async function POST(req: Request) {
       const fileName = `${Date.now()}-${image.name}`;
       const fileBuffer = await fileToBuffer(image);
 
-      // Upload to Supabase Storage
       const { error: uploadError } = await supabase.storage
         .from("schoolimages")
         .upload(fileName, fileBuffer, {
@@ -36,12 +35,10 @@ export async function POST(req: Request) {
 
       if (uploadError) throw uploadError;
 
-      // Get Public URL
       const { data } = supabase.storage.from("schoolimages").getPublicUrl(fileName);
       imageUrl = data?.publicUrl || null;
     }
 
-    // Insert into DB
     const { error } = await supabase.from("schools").insert([
       { name, address, city, state, contact, email_id, image: imageUrl },
     ]);

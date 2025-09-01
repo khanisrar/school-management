@@ -15,20 +15,17 @@ type FormValues = {
 };
 
 export default function AddSchool() {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<FormValues>();
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>();
   const [mounted, setMounted] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("address", data.address);
@@ -56,6 +53,8 @@ export default function AddSchool() {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       alert("Error: " + message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -64,12 +63,13 @@ export default function AddSchool() {
   return (
     <main className="flex flex-col items-center pt-14">
       <Heading title="Add School" />
+
       <form
         onSubmit={handleSubmit(onSubmit)}
         encType="multipart/form-data"
-        className="flex flex-col gap-4 w-full max-w-xl bg-white p-8 shadow-lg rounded-lg"
+        className="flex flex-col gap-3 w-full max-w-xl bg-white p-8 shadow-lg rounded-lg"
       >
-         <div>
+        <div>
           <label className="block mb-1 font-medium">School Name:</label>
           <input
             {...register("name", { required: "School Name is required" })}
@@ -79,7 +79,6 @@ export default function AddSchool() {
           {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
         </div>
 
-        {/* Address */}
         <div>
           <label className="block mb-1 font-medium">Address:</label>
           <input
@@ -90,7 +89,6 @@ export default function AddSchool() {
           {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
         </div>
 
-        {/* City */}
         <div>
           <label className="block mb-1 font-medium">City:</label>
           <input
@@ -101,7 +99,6 @@ export default function AddSchool() {
           {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city.message}</p>}
         </div>
 
-        {/* State */}
         <div>
           <label className="block mb-1 font-medium">State:</label>
           <input
@@ -112,7 +109,6 @@ export default function AddSchool() {
           {errors.state && <p className="text-red-500 text-sm mt-1">{errors.state.message}</p>}
         </div>
 
-        {/* Contact */}
         <div>
           <label className="block mb-1 font-medium">Contact:</label>
           <input
@@ -127,7 +123,6 @@ export default function AddSchool() {
           {errors.contact && <p className="text-red-500 text-sm mt-1">{errors.contact.message}</p>}
         </div>
 
-        {/* Email */}
         <div>
           <label className="block mb-1 font-medium">Email:</label>
           <input
@@ -142,7 +137,6 @@ export default function AddSchool() {
           {errors.email_id && <p className="text-red-500 text-sm mt-1">{errors.email_id.message}</p>}
         </div>
 
-        {/* Image */}
         <div>
           <label className="block mb-1 font-medium">Upload Image:</label>
           <input
@@ -155,13 +149,15 @@ export default function AddSchool() {
 
         <button
           type="submit"
-          className="bg-fuchsia-800 text-white py-2 px-4 mt-4 rounded hover:bg-fuchsia-900 transition-all duration-300"
+          disabled={isSubmitting}
+          className={`bg-fuchsia-800 text-white py-2 px-4 mt-4 rounded transition-all duration-300 hover:bg-fuchsia-900 cursor-pointer ${
+            isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
-          Add School
+          {isSubmitting ? "Adding..." : "Add School"}
         </button>
       </form>
 
-      {/* Success popup */}
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center">
           <div className="bg-green-200 p-6 rounded-lg drop-shadow-[0_0_5px_rgba(0,0,0,0.7)] text-center max-w-sm w-full animate-fadeIn">

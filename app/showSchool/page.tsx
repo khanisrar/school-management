@@ -6,7 +6,6 @@ import CustomLoading from "@/ui/Common/CustomLoading";
 import Heading from "@/ui/Common/Heading";
 import Link from "next/link";
 
-// Define School interface
 interface School {
   id: number;
   name: string;

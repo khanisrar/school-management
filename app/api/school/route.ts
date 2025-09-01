@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
-import pool from "@/lib/db";
+import { supabase } from "@/lib/supabaseClient";
+
+// Convert File → Buffer (needed for Supabase upload in Node.js)
+async function fileToBuffer(file: File): Promise<Buffer> {
+  const arrayBuffer = await file.arrayBuffer();
+  return Buffer.from(arrayBuffer);
+}
 
 export async function POST(req: Request) {
   try {
@@ -13,42 +19,54 @@ export async function POST(req: Request) {
     const email_id = formData.get("email_id") as string;
     const image = formData.get("image") as File | null;
 
+    let imageUrl: string | null = null;
 
-    let imageName: string | null = null;
     if (image) {
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      imageName = Date.now() + "-" + image.name;
-      const fs = require("fs");
-      fs.writeFileSync(`public/schoolImages/${imageName}`, buffer);
+      const fileName = `${Date.now()}-${image.name}`;
+      const fileBuffer = await fileToBuffer(image);
+
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from("schoolimages")
+        .upload(fileName, fileBuffer, {
+          contentType: image.type, // keep correct MIME type
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get Public URL
+      const { data } = supabase.storage.from("schoolimages").getPublicUrl(fileName);
+      imageUrl = data.publicUrl;
     }
 
-    await pool.query(
-      "INSERT INTO schools (name, address, city, state, contact, email_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [name, address, city, state, contact, email_id, imageName]
-    );
+    // Insert into DB
+    const { error } = await supabase.from("schools").insert([
+      { name, address, city, state, contact, email_id, image: imageUrl },
+    ]);
+
+    if (error) throw error;
 
     return NextResponse.json({ message: "School added successfully!" });
+  } catch (error: any) {
+    console.error("Error inserting school:", error);
+    return NextResponse.json(
+      { error: "Failed to add school", details: error.message },
+      { status: 500 }
+    );
   }
-  
-catch (error: any) {
-  console.error("Error inserting school:", error);
-  return NextResponse.json(
-    { error: "Failed to add school", details: error.message },
-    { status: 500 }
-  );
-}
 }
 
-// Handle GET request
 export async function GET() {
   try {
-    const [rows] = await pool.query("SELECT * FROM schools");
-    return NextResponse.json(rows);
-  } catch (error) {
+    const { data, error } = await supabase.from("schools").select("*");
+    if (error) throw error;
+    return NextResponse.json(data);
+  } catch (error: any) {
     console.error("Error fetching schools:", error);
     return NextResponse.json(
-      { error: "Failed to fetch schools" },
+      { error: "Failed to fetch schools", details: error.message },
       { status: 500 }
     );
   }
@@ -60,15 +78,16 @@ export async function DELETE(req: Request) {
     const id = searchParams.get("id");
     if (!id) {
       return NextResponse.json({ error: "School ID is required" }, { status: 400 });
-    } 
-    await pool.query("DELETE FROM schools WHERE id = ?", [id]);
+    }
+
+    const { error } = await supabase.from("schools").delete().eq("id", id);
+    if (error) throw error;
+
     return NextResponse.json({ message: "School deleted successfully!" });
-  }
-  catch (error) {
+  } catch (error: any) {
     return NextResponse.json(
-      { error: "Failed to delete school" },
+      { error: "Failed to delete school", details: error.message },
       { status: 500 }
     );
   }
 }
-

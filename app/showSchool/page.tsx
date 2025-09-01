@@ -82,16 +82,19 @@ export default function ShowSchool () {
 >
   ✕
 </button>
-              {school.image && (
-                <Image
-                          src={`/schoolImages/${school.image}`}
-                            width={256}
-                   height={128}
-                  alt={school.name}
-                          className="w-full h-auto object-cover mb-2"
-                          priority
-                />
-              )}
+            {school.image ? (
+  <Image
+    src={school.image}
+    width={256}
+    height={128}
+    alt={school.name}
+    className="w-full h-auto object-cover mb-2"
+  />
+) : (
+  <div className="w-full h-32 bg-gray-200 flex items-center justify-center text-gray-500">
+    No Image
+  </div>
+)}
                 <p className="text-sm text-fuchsia-700 mb-2">
     {school.city}, {school.state}
   </p>

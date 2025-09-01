@@ -29,7 +29,7 @@ export async function POST(req: Request) {
       const { error: uploadError } = await supabase.storage
         .from("schoolimages")
         .upload(fileName, fileBuffer, {
-          contentType: image.type, // keep correct MIME type
+          contentType: image.type,
           cacheControl: "3600",
           upsert: false,
         });
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
       // Get Public URL
       const { data } = supabase.storage.from("schoolimages").getPublicUrl(fileName);
-      imageUrl = data.publicUrl;
+      imageUrl = data?.publicUrl || null;
     }
 
     // Insert into DB
@@ -49,10 +49,11 @@ export async function POST(req: Request) {
     if (error) throw error;
 
     return NextResponse.json({ message: "School added successfully!" });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error inserting school:", error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Failed to add school", details: error.message },
+      { error: "Failed to add school", details: message },
       { status: 500 }
     );
   }
@@ -63,10 +64,11 @@ export async function GET() {
     const { data, error } = await supabase.from("schools").select("*");
     if (error) throw error;
     return NextResponse.json(data);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching schools:", error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Failed to fetch schools", details: error.message },
+      { error: "Failed to fetch schools", details: message },
       { status: 500 }
     );
   }
@@ -80,13 +82,15 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "School ID is required" }, { status: 400 });
     }
 
-    const { error } = await supabase.from("schools").delete().eq("id", id);
+    const { error } = await supabase.from("schools").delete().eq("id", Number(id));
     if (error) throw error;
 
     return NextResponse.json({ message: "School deleted successfully!" });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    console.error("Error deleting school:", error);
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Failed to delete school", details: error.message },
+      { error: "Failed to delete school", details: message },
       { status: 500 }
     );
   }

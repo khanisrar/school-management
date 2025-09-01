@@ -59,7 +59,7 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className={`px-3 py-2 rounded transition ${
+              className={`px-3 py-2 rounded transition text-center ${
                 mounted && pathname === link.href
                   ? "bg-fuchsia-800 text-white"
                   : "hover:bg-fuchsia-800 hover:text-white"

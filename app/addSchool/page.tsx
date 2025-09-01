@@ -69,8 +69,7 @@ export default function AddSchool() {
         encType="multipart/form-data"
         className="flex flex-col gap-4 w-full max-w-xl bg-white p-8 shadow-lg rounded-lg"
       >
-        {/* School Name */}
-        <div>
+         <div>
           <label className="block mb-1 font-medium">School Name:</label>
           <input
             {...register("name", { required: "School Name is required" })}
@@ -88,9 +87,7 @@ export default function AddSchool() {
             placeholder="Enter Address"
             className="border p-2 rounded w-full outline-none"
           />
-          {errors.address && (
-            <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>
-          )}
+          {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address.message}</p>}
         </div>
 
         {/* City */}
@@ -127,9 +124,7 @@ export default function AddSchool() {
             placeholder="Enter Contact Number"
             className="border p-2 rounded w-full outline-none"
           />
-          {errors.contact && (
-            <p className="text-red-500 text-sm mt-1">{errors.contact.message}</p>
-          )}
+          {errors.contact && <p className="text-red-500 text-sm mt-1">{errors.contact.message}</p>}
         </div>
 
         {/* Email */}
@@ -144,9 +139,7 @@ export default function AddSchool() {
             placeholder="Enter Email"
             className="border p-2 rounded w-full outline-none"
           />
-          {errors.email_id && (
-            <p className="text-red-500 text-sm mt-1">{errors.email_id.message}</p>
-          )}
+          {errors.email_id && <p className="text-red-500 text-sm mt-1">{errors.email_id.message}</p>}
         </div>
 
         {/* Image */}
@@ -157,9 +150,7 @@ export default function AddSchool() {
             {...register("image", { required: "Please upload an image" })}
             className="border p-2 rounded cursor-pointer w-full outline-none"
           />
-          {errors.image && (
-            <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
-          )}
+          {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>}
         </div>
 
         <button

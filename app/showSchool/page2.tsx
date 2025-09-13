@@ -1,4 +1,4 @@
-"use client"; // <--- make this a client component
+"use client";
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
@@ -23,8 +23,8 @@ export default function ShowSchool() {
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
 
+  // Safe access to localStorage inside useEffect
   useEffect(() => {
-    // Safe localStorage access
     const token =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
     setLoggedIn(!!token);

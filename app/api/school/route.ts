@@ -1,6 +1,6 @@
+// app/api/school/route.ts
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabaseClient";
-import { authenticate } from "@/helpers/auth";
 
 // Convert File → Buffer (needed for Supabase upload in Node.js)
 async function fileToBuffer(file: File): Promise<Buffer> {
@@ -8,10 +8,17 @@ async function fileToBuffer(file: File): Promise<Buffer> {
   return Buffer.from(arrayBuffer);
 }
 
+// Skip authentication during build time
+const shouldSkipAuth = process.env.NEXT_PHASE === "phase-production-build";
+
 export async function POST(req: Request) {
-  const user = await authenticate(req);
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Skip authentication during build
+  if (!shouldSkipAuth) {
+    const { authenticate } = await import("@/helpers/auth");
+    const user = await authenticate(req);
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
   }
 
   try {
@@ -82,9 +89,13 @@ export async function GET() {
 }
 
 export async function DELETE(req: Request) {
-  const user = await authenticate(req);
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Skip authentication during build
+  if (!shouldSkipAuth) {
+    const { authenticate } = await import("@/helpers/auth");
+    const user = await authenticate(req);
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
   }
 
   try {

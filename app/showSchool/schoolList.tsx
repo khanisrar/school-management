@@ -24,9 +24,11 @@ export default function SchoolList() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    // ✅ Access localStorage only inside useEffect
-    const token = localStorage.getItem("token");
-    setLoggedIn(!!token);
+    // ✅ Check if we're on the client side before accessing localStorage
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      setLoggedIn(!!token);
+    }
 
     const fetchSchools = async () => {
       try {

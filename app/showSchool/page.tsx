@@ -21,11 +21,11 @@ interface School {
 export default function ShowSchool() {
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showPopup, setShowPopup] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token"); // ✅ Move inside useEffect
+    // ✅ Access localStorage only inside useEffect after mounting
+    const token = localStorage.getItem("token");
     setLoggedIn(!!token);
 
     const fetchSchools = async () => {
@@ -54,27 +54,28 @@ export default function ShowSchool() {
       setSchools(schools.filter((school) => school.id !== id));
       toast.success("School removed successfully!", {
         style: {
-          background: "#d1fae5", // light green
-          color: "#065f46", // dark green text
+          background: "#d1fae5",
+          color: "#065f46",
         },
       });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Unknown error";
       toast.error("Error deleting school: " + message, {
         style: {
-          background: "#fee2e2", // light red
-          color: "#b91c1c", // dark red text
+          background: "#fee2e2",
+          color: "#b91c1c",
         },
       });
     }
   };
 
-  if (loading)
+  if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <CustomLoading />
       </div>
     );
+  }
 
   return (
     <main className="lg:px-16 md:px-8 px-6 pt-14">

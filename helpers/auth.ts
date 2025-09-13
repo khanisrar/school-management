@@ -1,5 +1,3 @@
-// lib/authenticate.ts
-
 import { verifyJwt } from "@/helpers/jwt";
 import { supabase } from "@/lib/supabaseClient";
 

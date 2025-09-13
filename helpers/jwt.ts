@@ -1,4 +1,3 @@
-// helpers/jwt.ts
 import jwt from "jsonwebtoken";
 
 console.log("JWT_SECRET is", process.env.JWT_SECRET);

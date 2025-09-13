@@ -24,7 +24,7 @@ export default function ShowSchool() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    // ✅ Access localStorage only inside useEffect after mounting
+    // ✅ Access localStorage only inside useEffect
     const token = localStorage.getItem("token");
     setLoggedIn(!!token);
 
@@ -51,7 +51,7 @@ export default function ShowSchool() {
         method: "DELETE",
       });
       if (!res.ok) throw new Error("Failed to delete school");
-      setSchools(schools.filter((school) => school.id !== id));
+      setSchools((prev) => prev.filter((school) => school.id !== id));
       toast.success("School removed successfully!", {
         style: {
           background: "#d1fae5",

@@ -1,11 +1,11 @@
 // app/showSchool/page.tsx
-// import dynamic from "next/dynamic";
-import SchoolList from "./schoolList";
+import dynamic from "next/dynamic";
 
-// const SchoolList = dynamic(() => import("./schoolList"), {
-//   ssr: false,
-// });
+const SchoolList = dynamic(() => import("./schoolList"), {
+  ssr: false,
+  loading: () => <div>Loading schools...</div>,
+});
 
-export default function ShowSchool() {
+export default function ShowSchoolPage() {
   return <SchoolList />;
 }

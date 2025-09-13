@@ -16,7 +16,7 @@ export default function Login() {
     register,
     handleSubmit,
     formState: { errors },
-    getValues,
+    // getValues,
   } = useForm<FormValues>();
 
   const [otpSent, setOtpSent] = useState(false);

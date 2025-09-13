@@ -6,7 +6,7 @@ import CustomLoading from "@/ui/Common/CustomLoading";
 import Heading from "@/ui/Common/Heading";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { useAuth } from "@/helpers/useAuth"; // Import the custom hook
+import { safeLocalStorage } from "@/helpers/localStorage"; // Import the safe utility
 
 interface School {
   id: number;
@@ -22,9 +22,13 @@ interface School {
 export default function SchoolList() {
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
-  const { isLoggedIn, isChecking } = useAuth(); // Use the custom hook
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
+    // ✅ Use the safe localStorage utility
+    const token = safeLocalStorage.getItem("token");
+    setLoggedIn(!!token);
+
     const fetchSchools = async () => {
       try {
         const res = await fetch("/api/school");
@@ -57,8 +61,7 @@ export default function SchoolList() {
     }
   };
 
-  // Show loading while checking auth status
-  if (isChecking || loading) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <CustomLoading />
@@ -69,7 +72,7 @@ export default function SchoolList() {
   return (
     <main className="lg:px-16 md:px-8 px-6 pt-14">
       <Heading title="Schools List" />
-      {isLoggedIn && (
+      {loggedIn && (
         <Link href={"/addSchool"} className="flex justify-end mb-6">
           <button className="bg-green-600 text-white py-2 px-4 rounded-md cursor-pointer hover:bg-green-700">
             + Add New School
@@ -84,7 +87,7 @@ export default function SchoolList() {
             <li
               key={school.id}
               className="max-w-full flex flex-col bg-white p-6 pointer-events-auto transform scale-100 opacity-100 transition-all duration-300 ease-in-out drop-shadow-[0_0_5px_rgba(0,0,0,0.3)] hover:shadow-lg rounded-lg relative">
-              {isLoggedIn && (
+              {loggedIn && (
                 <button
                   onClick={() => handleRemove(school.id)}
                   className="bg-red-600 absolute top-0 right-0 text-md font-bold text-white px-1 cursor-pointer rounded-bl-[3px] rounded-tr-[3px]"

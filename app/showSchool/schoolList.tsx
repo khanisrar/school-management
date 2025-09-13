@@ -24,11 +24,13 @@ export default function SchoolList() {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    // ✅ Check if we're on the client side before accessing localStorage
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      setLoggedIn(!!token);
-    }
+    // ✅ Check if we're on the client before accessing localStorage
+    const checkAuth = () => {
+      if (typeof window !== "undefined") {
+        const token = localStorage.getItem("token");
+        setLoggedIn(!!token);
+      }
+    };
 
     const fetchSchools = async () => {
       try {
@@ -39,11 +41,13 @@ export default function SchoolList() {
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err);
         console.error("Error fetching schools:", message);
+        toast.error("Error fetching schools: " + message);
       } finally {
         setLoading(false);
       }
     };
 
+    checkAuth();
     fetchSchools();
   }, []);
 
@@ -54,20 +58,10 @@ export default function SchoolList() {
       });
       if (!res.ok) throw new Error("Failed to delete school");
       setSchools((prev) => prev.filter((school) => school.id !== id));
-      toast.success("School removed successfully!", {
-        style: {
-          background: "#d1fae5",
-          color: "#065f46",
-        },
-      });
+      toast.success("School removed successfully!");
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Unknown error";
-      toast.error("Error deleting school: " + message, {
-        style: {
-          background: "#fee2e2",
-          color: "#b91c1c",
-        },
-      });
+      toast.error("Error deleting school: " + message);
     }
   };
 
@@ -90,7 +84,7 @@ export default function SchoolList() {
         </Link>
       )}
       {schools.length === 0 ? (
-        <p>No schools available.</p>
+        <p className="text-center text-gray-500 py-10">No schools available.</p>
       ) : (
         <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {schools.map((school) => (

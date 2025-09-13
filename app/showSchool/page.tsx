@@ -23,10 +23,9 @@ export default function ShowSchool() {
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token"); // ✅ Move inside useEffect
     setLoggedIn(!!token);
 
     const fetchSchools = async () => {
@@ -53,20 +52,18 @@ export default function ShowSchool() {
       });
       if (!res.ok) throw new Error("Failed to delete school");
       setSchools(schools.filter((school) => school.id !== id));
-      // setShowPopup(true);
-      toast.success("School Added Successfully!", {
+      toast.success("School removed successfully!", {
         style: {
           background: "#d1fae5", // light green
           color: "#065f46", // dark green text
         },
       });
-      // setTimeout(() => setShowPopup(false), 3000);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Unknown error";
       toast.error("Error deleting school: " + message, {
         style: {
-          background: "#d1fae5", // light green
-          color: "#065f46", // dark green text
+          background: "#fee2e2", // light red
+          color: "#b91c1c", // dark red text
         },
       });
     }
@@ -137,15 +134,6 @@ export default function ShowSchool() {
             </li>
           ))}
         </ul>
-      )}
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center">
-          <div className="bg-green-200 p-6 rounded-lg drop-shadow-[0_0_5px_rgba(0,0,0,0.7)] text-center max-w-sm w-full animate-fadeIn">
-            <h2 className="text-2xl font-bold text-green-700 mb-2">
-              School Removed Successfully!
-            </h2>
-          </div>
-        </div>
       )}
     </main>
   );

@@ -1,3 +1,4 @@
+// app/showSchool/page.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -6,7 +7,6 @@ import CustomLoading from "@/ui/Common/CustomLoading";
 import Heading from "@/ui/Common/Heading";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { safeLocalStorage } from "@/helpers/localStorage"; // Import the safe utility
 
 interface School {
   id: number;
@@ -19,14 +19,25 @@ interface School {
   image: string | null;
 }
 
+// Safe localStorage access utility
+const getLocalStorage = (key: string): string | null => {
+  if (typeof window === "undefined") return null;
+  try {
+    return localStorage.getItem(key);
+  } catch (error) {
+    console.error("Error accessing localStorage:", error);
+    return null;
+  }
+};
+
 export default function SchoolList() {
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    // ✅ Use the safe localStorage utility
-    const token = safeLocalStorage.getItem("token");
+    // This will only run on the client side
+    const token = getLocalStorage("token");
     setLoggedIn(!!token);
 
     const fetchSchools = async () => {
@@ -49,9 +60,15 @@ export default function SchoolList() {
 
   const handleRemove = async (id: number) => {
     try {
+      const token = getLocalStorage("token");
+
       const res = await fetch(`/api/school?id=${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
       if (!res.ok) throw new Error("Failed to delete school");
       setSchools((prev) => prev.filter((school) => school.id !== id));
       toast.success("School removed successfully!");

@@ -1,18 +1,14 @@
-// app/api/school/route.ts
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabaseClient";
 
-// Convert File → Buffer (needed for Supabase upload in Node.js)
 async function fileToBuffer(file: File): Promise<Buffer> {
   const arrayBuffer = await file.arrayBuffer();
   return Buffer.from(arrayBuffer);
 }
 
-// Skip authentication during build time
 const shouldSkipAuth = process.env.NEXT_PHASE === "phase-production-build";
 
 export async function POST(req: Request) {
-  // Skip authentication during build
   if (!shouldSkipAuth) {
     const { authenticate } = await import("@/helpers/auth");
     const user = await authenticate(req);
@@ -89,7 +85,6 @@ export async function GET() {
 }
 
 export async function DELETE(req: Request) {
-  // Skip authentication during build
   if (!shouldSkipAuth) {
     const { authenticate } = await import("@/helpers/auth");
     const user = await authenticate(req);

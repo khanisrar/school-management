@@ -39,10 +39,8 @@ export async function POST(req: Request) {
       await supabase.from("users").insert([{ email }]);
     }
 
-    // 4️⃣ Generate custom JWT (for client-side auth)
     const token = signJwt({ email });
 
-    // 5️⃣ Return token to client
     return NextResponse.json({ message: "OTP verified", token });
   } catch (error) {
     console.error("Error verifying OTP:", error);

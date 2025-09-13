@@ -10,13 +10,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
-    // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Set expiry to 10 minutes from now
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
-    // Store OTP in Supabase
     const { error: dbError } = await supabase
       .from("email_otps")
       .insert([{ email, otp, expires_at: expiresAt }]);
@@ -26,7 +23,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Database error" }, { status: 500 });
     }
 
-    // Send OTP via email
     await sendEmail(
       email,
       "Your OTP Code",

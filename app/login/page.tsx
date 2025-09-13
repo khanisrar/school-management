@@ -16,14 +16,12 @@ export default function Login() {
     register,
     handleSubmit,
     formState: { errors },
-    // getValues,
   } = useForm<FormValues>();
 
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Send OTP
   const sendOtp = handleSubmit(async (data) => {
     setLoading(true);
     try {
@@ -38,16 +36,16 @@ export default function Login() {
       setOtpSent(true);
       toast.success("OTP sent successfully!", {
         style: {
-          background: "#d1fae5", // light green
-          color: "#065f46", // dark green text
+          background: "#d1fae5",
+          color: "#065f46",
         },
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       toast.error("Error sending OTP: " + message, {
         style: {
-          background: "#d1fae5", // light green
-          color: "#065f46", // dark green text
+          background: "#d1fae5",
+          color: "#065f46",
         },
       });
     } finally {
@@ -55,7 +53,6 @@ export default function Login() {
     }
   });
 
-  // Verify OTP
   const verifyOtp = handleSubmit(async (data) => {
     setLoading(true);
     try {
@@ -77,18 +74,17 @@ export default function Login() {
       localStorage.setItem("token", result.token || "dummy-token"); // store token
       toast.success("OTP Verify Successfully!", {
         style: {
-          background: "#d1fae5", // light green
-          color: "#065f46", // dark green text
+          background: "#d1fae5",
+          color: "#065f46",
         },
       });
-      router.push("/"); // redirect to home or dashboard
-      // window.location.reload();
+      router.push("/");
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       toast.error("Error verifying OTP: " + message, {
         style: {
-          background: "#d1fae5", // light green
-          color: "#065f46", // dark green text
+          background: "#d1fae5",
+          color: "#065f46",
         },
       });
     } finally {
@@ -102,11 +98,16 @@ export default function Login() {
       <div className="max-w-md w-full p-6 bg-white shadow-md rounded-md">
         <h2 className="text-xl font-bold mb-4">Email OTP Authentication</h2>
 
-        {/* Email input */}
         <div className="mb-4">
           <label className="block mb-1">Email:</label>
           <input
-            {...register("email", { required: "Email is required" })}
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // simple email regex
+                message: "Please enter a valid email address",
+              },
+            })}
             type="email"
             className="border p-2 w-full rounded"
             placeholder="Enter your email"
@@ -125,7 +126,6 @@ export default function Login() {
           </button>
         ) : (
           <>
-            {/* OTP input */}
             <div className="mb-4 mt-4">
               <label className="block mb-1">Enter OTP:</label>
               <input

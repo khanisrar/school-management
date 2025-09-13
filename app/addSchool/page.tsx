@@ -116,7 +116,6 @@ export default function AddSchool() {
         onSubmit={handleSubmit(onSubmit)}
         encType="multipart/form-data"
         className="flex flex-col gap-3 w-full max-w-xl bg-white p-8 shadow-lg rounded-lg">
-        {/* School Name */}
         <div>
           <label className="block mb-1 font-medium">School Name:</label>
           <input
@@ -129,7 +128,6 @@ export default function AddSchool() {
           )}
         </div>
 
-        {/* Address */}
         <div>
           <label className="block mb-1 font-medium">Address:</label>
           <input
@@ -144,7 +142,6 @@ export default function AddSchool() {
           )}
         </div>
 
-        {/* City */}
         <div>
           <label className="block mb-1 font-medium">City:</label>
           <input
@@ -164,7 +161,6 @@ export default function AddSchool() {
           )}
         </div>
 
-        {/* State */}
         <div>
           <label className="block mb-1 font-medium">State:</label>
           <input
@@ -183,7 +179,6 @@ export default function AddSchool() {
           )}
         </div>
 
-        {/* Contact */}
         <div>
           <label className="block mb-1 font-medium">Contact:</label>
           <input
@@ -205,7 +200,6 @@ export default function AddSchool() {
           )}
         </div>
 
-        {/* Email */}
         <div>
           <label className="block mb-1 font-medium">Email:</label>
           <input
@@ -227,7 +221,6 @@ export default function AddSchool() {
           )}
         </div>
 
-        {/* Image Upload */}
         <div>
           <label className="block mb-1 font-medium">Upload Image:</label>
           <input

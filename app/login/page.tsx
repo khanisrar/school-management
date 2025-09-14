@@ -140,6 +140,10 @@ export default function Login() {
                 </p>
               )}
             </div>
+            <p className="text-blue-600 text-sm my-2">
+              OTP might be in your spam folder—please check if it’s not in your
+              inbox.
+            </p>
 
             <button
               onClick={verifyOtp}

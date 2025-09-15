@@ -19,13 +19,11 @@ export default function Home() {
         <p className="text-gray-600 text-lg">Manage your schools efficiently</p>
 
         <div className="flex flex-col md:flex-row gap-6 justify-center">
-          {loggedIn && (
-            <Link
-              href="/addSchool"
-              className="bg-green-600 text-white px-8 py-4 rounded-xl text-xl font-medium shadow-lg hover:bg-green-800 transition-all duration-300">
-              Add School
-            </Link>
-          )}
+          <Link
+            href="/addSchool"
+            className="bg-green-600 text-white px-8 py-4 rounded-xl text-xl font-medium shadow-lg hover:bg-green-800 transition-all duration-300">
+            Add School
+          </Link>
 
           <Link
             href="/showSchool"

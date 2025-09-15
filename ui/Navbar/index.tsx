@@ -35,7 +35,7 @@ export default function Navbar() {
 
   const links: LinkItem[] = [
     { href: "/", label: "Home" },
-    loggedIn && { href: "/addSchool", label: "Add School" },
+    { href: "/addSchool", label: "Add School" },
     { href: "/showSchool", label: "Show Schools" },
     loggedIn
       ? {

@@ -77,7 +77,7 @@ export default function AddSchool() {
       const res = await fetch("/api/school", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`, // Attach the token
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
